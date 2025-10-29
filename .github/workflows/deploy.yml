@@ -1,0 +1,33 @@
+# GitHub Actions workflow to deploy the FastAPI app to Render
+# This file goes in your TARGET repository (e.g., test_api/.github/workflows/deploy.yml)
+
+name: Deploy to Render
+
+# --- Trigger ---
+# Allows this workflow to be triggered manually or via API (workflow_dispatch)
+on:
+  workflow_dispatch:
+    # Optional: Define inputs if your agent needs to pass data to the action
+    # inputs:
+    #   some_input:
+    #     description: 'An example input'
+    #     required: false
+    #     default: 'default_value'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner provided by GitHub
+
+    steps:
+      # --- Step 1: Checkout Code ---
+      # Downloads the code from the branch that triggered the workflow
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Standard action to get the code
+
+      # --- Step 2: Trigger Render Deploy Hook ---
+      # This step simply sends a request to a unique Render URL.
+      # Render sees this request and automatically pulls the latest commit
+      # from the connected branch and redeploys the service.
+      - name: Trigger Render Deploy
+        run: curl "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        # IMPORTANT: You need to create this secret in your GitHub repository settings!
