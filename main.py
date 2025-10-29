@@ -1,25 +1,34 @@
-# Simplified test_api/main.py
+# Updated test_api/main.py (Simpler GET with Path Parameter)
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
-app = FastAPI(title="Simplified Sample FastAPI App")
+app = FastAPI(title="Super Simple Sample FastAPI App")
 
 # GET endpoint (static response) - Stays the same
 @app.get("/hello")
 def read_hello():
     return {"message": "Hello, World!"}
 
-# --- SIMPLIFIED POST ENDPOINT ---
-# Now takes a simple query parameter instead of a JSON body
-@app.post("/items")
-def create_item_simple(item_name: str):
-    # No Pydantic validation needed here
-    return {"message": f"Item '{item_name}' received successfully!"}
+# --- NEW: Simple GET endpoint with a path parameter ---
+@app.get("/check_prime/{number}")
+def check_if_prime(number: int):
+    """Checks if a given integer is a prime number."""
+    if number < 2:
+        # You could return False or raise an error, let's raise for testing
+        raise HTTPException(status_code=400, detail="Number must be 2 or greater.")
+    
+    is_prime = True
+    for i in range(2, int(number**0.5) + 1):
+        if number % i == 0:
+            is_prime = False
+            break
+            
+    return {"number": number, "is_prime": is_prime}
 
-# You can keep the old endpoint commented out or remove it
+# --- Keep the old POST endpoint commented out or remove it ---
 # class Item(BaseModel):
 #     name: str
 #     value: int
-# @app.post("/items_old")
-# def create_item(item: Item):
-#     return {"message": f"Item '{item.name}' with value {item.value} received successfully!"}
+# @app.post("/items")
+# def create_item_simple(item_name: str):
+#     return {"message": f"Item '{item_name}' received successfully!"}
