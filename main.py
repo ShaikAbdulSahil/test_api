@@ -5,9 +5,9 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI(title="Super Simple Sample FastAPI App")
 
 # GET endpoint (static response) - Stays the same
-@app.get("/hello")
-def read_hello():
-    return {"message": "Hello, World!"}
+# @app.get("/hello")
+# def read_hello():
+#     return {"message": "Hello, World!"}
 
 # --- NEW: Simple GET endpoint with a path parameter ---
 @app.get("/check_prime/{number}")
